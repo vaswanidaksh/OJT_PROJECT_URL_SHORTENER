@@ -17,3 +17,13 @@ It also includes an admin interface for managing short links, monitoring usage, 
 🔎 Slug Generation (unique short codes)
 
 🗂️ Admin Dashboard to manage links
+
+📊 Click Counter (optional enhancement)
+
+📷 QR Code Generation (Stretch Goal)
+
+🗑️ CRUD Operations for stored URLs
+
+🛡️ URL Validation before saving
+
+🌐 Deployed on PythonAnywhere ye features add kar de readme mae pehele bas
