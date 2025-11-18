@@ -28,7 +28,7 @@ It also includes an admin interface for managing short links, monitoring usage, 
 
 🌐 Deployed on PythonAnywhere ye features add kar de readme mae pehele bas
 
-🎯 Purpose of the Project
+# 🎯 Purpose of the Project
 
 This utility solves the real-world problem of sharing long, cluttered URLs—especially in marketing, events, and social media.
 By allowing links to expire automatically, it enhances security and reduces misuse of outdated or temporary links.
