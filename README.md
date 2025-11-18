@@ -26,7 +26,7 @@ It also includes an admin interface for managing short links, monitoring usage, 
 
 🛡️ URL Validation before saving
 
-🌐 Deployed on PythonAnywhere ye features add kar de readme mae pehele bas
+🌐 Deployed on PythonAnywhere
 
 # 🎯 Purpose of the Project
 
