@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-r from-blue-500 to-purple-500 flex flex-col items-center justify-center min-h-screen text-white">
+    <div class="flex gap-4 absolute top-6">
+        <button onclick="showSection('main')" class="bg-white text-blue-600 px-4 py-2 rounded shadow hover:bg-gray-200">
+            Home
+        </button>
+
+        <button onclick="showSection('about')" class="bg-white text-blue-600 px-4 py-2 rounded shadow hover:bg-gray-200">
+            About Us
+        </button>
+    </div>
+    <div id="main" class="flex flex-col items-center">
+        <h2 class="text-2xl font-bold mb-2 mt-20">Hi</h2>
+        <h2 class="font-mono text-xl mb-6">
+            Make your URL short in just a few seconds
+        </h2>
+
+        <div class="bg-white p-6 rounded-lg shadow-lg text-black w-80">
+            <div id="long" class="flex flex-col gap-3">
+                <input 
+                    type="text" 
+                    placeholder="Enter a long URL"
+                    class="border px-3 py-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+                >
+                <button class="bg-blue-500 text-white py-2 rounded hover:bg-blue-600">
+                    Do it
+                </button>
+            </div>
+
+            <div id="qr" class="mt-4"></div>
+        </div>
+    </div>
+    <div id="about" class="hidden flex flex-col items-center mt-20">
+        <h2 class="text-3xl font-bold mb-4">About Us</h2>
+        <p class="text-lg text-center max-w-md">
+            We provide a fast and simple URL shortener tool that helps you make long links clean and easy to share.
+            Our goal is to keep things simple, fast, and user-friendly.
+        </p>
+    </div>
+    <script>
+        function showSection(section) {
+            document.getElementById('main').classList.add('hidden');
+            document.getElementById('about').classList.add('hidden');
+            document.getElementById(section).classList.remove('hidden');
+        }
+    </script>
+
+</body>
+</html>
