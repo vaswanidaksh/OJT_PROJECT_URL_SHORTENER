@@ -1,1 +1,119 @@
-@import "tailwindcss";
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f9;
+}
+
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #333;
+    padding: 15px 30px;
+    color: white;
+}
+
+nav ul {
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    margin-right: 20px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+nav ul li a:hover {
+    text-decoration: underline;
+}
+
+nav .right-buttons button,
+nav .left-buttons button {
+    padding: 10px 20px;
+    margin: 0 10px;
+    border: none;
+    background-color: #007bff;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+nav .right-buttons button:hover,
+nav .left-buttons button:hover {
+    background-color: #0056b3;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80vh;
+    flex-direction: column;
+}
+
+
+.section {
+    display: none;
+    text-align: center;
+    margin-top: 20px;
+}
+
+
+.section.active {
+    display: block;
+}
+
+
+.home-content {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.form-container {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 400px;
+    margin-top: 30px;
+}
+
+
+.form-container input[type="url"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+
+.form-container button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-container button:hover {
+    background-color: #218838;
+}
+
+
+#home {
+    display: block;
+}
