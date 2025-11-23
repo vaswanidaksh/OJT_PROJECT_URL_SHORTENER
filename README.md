@@ -1,5 +1,5 @@
 # OJT_PROJECT_URL_SHORTENER
-This is our OJT(On-The-Job Training) project and the topic is-
+This is our OJT(On-Job Training) project and the topic is-
 
 # URL Shortener – Django Utility Project
 This project is a fully functional URL Shortener built using the Django framework. It allows users to convert long URLs into short, easy-to-share links while offering essential features like link expiry, redirect validation, and an optional QR code generator.

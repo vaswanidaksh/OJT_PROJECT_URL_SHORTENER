@@ -60,3 +60,8 @@ document.querySelector('#generate-btn').addEventListener('click', function() {
     // Optionally, clear the input field after clicking Generate
     document.querySelector('#url-input').value = '';
 });
+ function showSection(section) {
+            document.getElementById('main').classList.add('hidden');
+            document.getElementById('about').classList.add('hidden');
+            document.getElementById(section).classList.remove('hidden');
+        }
