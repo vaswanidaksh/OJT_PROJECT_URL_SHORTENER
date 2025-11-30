@@ -131,12 +131,9 @@ def redirect_url(request, short_code):
 # API View (NEW)
 
 class ShortenerAPIView(ListCreateAPIView):
-    """
-    API endpoint that allows listing all short URLs (GET)
-    and creating a new short URL (POST).
     
-    This view combines the logic for both methods.
-    """
+    # API endpoint that allows listing all short URLs (GET) and creating a new short URL (POST).
+    # This view combines the logic for both methods.
     
     # Define the queryset (what data to list for GET)
     queryset = ShortURL.objects.all().order_by('-created_at')
@@ -153,4 +150,3 @@ class ShortenerAPIView(ListCreateAPIView):
         # Generate the short code before saving the validated data
         short_code = generate_short_code()
         serializer.save(short_code=short_code)
-
