@@ -20,14 +20,14 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b&9m16!%xc5@xy#rx3jdfx)g&$(5=&m@4*z161rfi$0&84)v3%'
+SECRET_KEY = 'DJANGO-SECRET-KEY'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-# ALLOWED_HOSTS = ['10.110.157.188', 'localhost', '127.0.0.1']
+
 ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'shortme.com', 'www.shortme.com', 'your_server_ip'] #'localhost', 'yourshortener.com', 'www.yourshortener.com'
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'shortme.com', 'www.shortme.com', 'your_server_ip']
 
 # Application definition
 
@@ -76,10 +76,7 @@ WSGI_APPLICATION = 'url_shortener_project.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    'default': dj_database_url.config(default="sqlite:///db.sqlite3")
 }
 
 
