@@ -5,7 +5,7 @@ from .utils import generate_short_code
 # Create your models here.
 
 class ShortURL(models.Model):
-    original_url = models.URLField(help_text="The long URL to shorten")
+    original_url = models.URLField(max_length=2048, help_text="The long URL to shorten")
     short_code = models.CharField(max_length=10, unique=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     # Expiry defaults to 7 days from creation
@@ -38,7 +38,7 @@ class URLMap(models.Model):
     short generated code.
     """
     long_url = models.URLField(
-        max_length=2000, 
+        max_length=2048, 
         unique=True,
         verbose_name="Original Long URL"
     )
