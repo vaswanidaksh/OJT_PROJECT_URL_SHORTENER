@@ -4,61 +4,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickLink | URL Shortener</title>
+    <title>ShortMe | URL Shortener</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>QuickLink 🚀</h1>
-            <p>Shorten links. Generate QR Codes. Track success.</p>
-        </header>
 
-        <div class="card">
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.original_url }}
-                <button type="submit" class="btn-shorten">Shorten URL</button>
-            </form>
-        </div>
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'logo.png' %}" alt="ShortMe Logo">
+            <span>ShortMe</span>
+        </a>
 
-        {% if new_url %}
-        <div class="result-card">
-            <h3>Here is your short link:</h3>
-            <div class="link-box">
-                <a href="{{ new_url }}" target="_blank" id="short-link">{{ new_url }}</a>
-                <button onclick="copyLink()" class="btn-copy">Copy</button>
-            </div>
-            
-            {% if qr_code %}
-            <div class="qr-section">
-                <p>Scan for mobile access:</p>
-                <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
-            </div>
-            {% endif %}
-        </div>
-        {% endif %}
+        <a href="{% url 'home' %}" class="nav-item">Home</a>
+        <a href="{% url 'features' %}" class="nav-item">Features</a>
+        <a href="{% url 'history' %}" class="nav-item">History</a>
+        <a href="{% url 'about' %}" class="nav-item">About</a>
     </div>
 
-    <div class="auth-nav">
+    <div class="nav-right">
         {% if user.is_authenticated %}
-            <span class="user-greeting">Welcome, **{{ user.username }}**!</span>
-            <a href="{% url 'logout' %}" class="nav-btn">Logout</a>
+            <a href="{% url 'logout' %}" class="nav-btn login-btn">Logout</a>
         {% else %}
-            <a href="{% url 'login' %}" class="nav-btn">Login</a>
-            <a href="{% url 'signup' %}" class="nav-btn">Sign Up</a>
+            <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
+            <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
         {% endif %}
     </div>
-    <div class="container">
+</nav>
+
+
+<!-- Main Container -->
+<div class="container">
+    <header>
+        <h1>Shorten Your Long URLs ✨</h1>
+        <p>Paste your long URL below and get a short one instantly.</p>
+    </header>
+
+    <div class="card">
+        <form method="POST">
+            {% csrf_token %}
+            <input type="url" name="long_url" placeholder="Enter your long URL here..." required>
+            <button type="submit" class="btn-shorten">Shorten URL</button>
+        </form>
     </div>
 
-    <script>
-        function copyLink() {
-            var copyText = document.getElementById("short-link").href;
-            navigator.clipboard.writeText(copyText);
-            alert("Link copied to clipboard!");
-        }
-    </script>
+    {% if short_url %}
+    <div class="card result-card">
+        <p><strong>Your Short URL:</strong></p>
+        <div class="link-box">
+            <a href="{{ short_url }}" target="_blank" id="short-link">{{ short_url }}</a>
+            <button onclick="copyLink()" class="btn-copy">Copy</button>
+        </div>
+
+        {% if qr_code %}
+        <!-- QR code hidden by default -->
+        <div id="qr-container" class="qr-section" style="display:none;">
+            <p>Scan the QR Code:</p>
+            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
+        </div>
+        <button onclick="showQR()" class="btn-qr">Show QR</button>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+
+<script>
+function copyLink() {
+    const copyText = document.getElementById("short-link").href;
+    navigator.clipboard.writeText(copyText);
+    alert("Link copied to clipboard!");
+}
+
+function showQR() {
+    const qrBox = document.getElementById("qr-container");
+    if (qrBox) qrBox.style.display = "block";
+}
+</script>
+
 </body>
 </html>

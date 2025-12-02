@@ -15,6 +15,7 @@ from io import BytesIO
 import base64 #For our slug
 
 
+
 # Create your views here.
 
 @login_required
@@ -61,8 +62,7 @@ def redirect_url_view(request, short_code):
         return HttpResponseNotFound("<h1>This link has expired.</h1>")
         
     return redirect(link.original_url)
-
-#For signup view
+# For signup view
 def signup_view(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -71,7 +71,11 @@ def signup_view(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            login(request, user) # Log user in immediately after successful signup
+
+            # IMPORTANT FIX: specify backend
+            user.backend = 'django.contrib.auth.backends.ModelBackend'
+
+            login(request, user)  # Log user in immediately after successful signup
             return redirect('home')
     else:
         form = UserCreationForm()
@@ -103,22 +107,36 @@ def custom_logout_view(request):
 
 
 def index(request):
-    # Your existing index view logic
+    short_url = None
+    qr_code_base64 = None
+
     if request.method == 'POST':
-        original_url = request.POST.get('original_url')
-        if not original_url:
+        long_url = request.POST.get('long_url')  # matches the input name
+        if not long_url:
             return render(request, 'shortener/index.html', {'error': 'URL cannot be empty.'})
 
+        # Generate short code
         short_code = generate_short_code()
-        short_url = ShortURL.objects.create(original_url=original_url, short_code=short_code)
-        
-        context = {
-            'original_url': original_url,
-            'short_url': request.build_absolute_uri('/') + short_code,
-        }
-        return render(request, 'shortener/index.html', context)
+        # Save to database
+        short_url_obj = ShortURL.objects.create(original_url=long_url, short_code=short_code)
+        # Construct full short URL
+        short_url = request.build_absolute_uri('/') + short_code
 
-    return render(request, 'shortener/index.html')
+        # QR CODE GENERATION
+        qr = qrcode.QRCode(version=1, box_size=10, border=5)
+        qr.add_data(short_url)
+        qr.make(fit=True)
+        img = qr.make_image(fill='black', back_color='white')
+        buffer = BytesIO()
+        img.save(buffer, format="PNG")
+        qr_code_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
+    context = {
+        'short_url': short_url,
+        'qr_code': qr_code_base64
+    }
+    return render(request, 'shortener/index.html', context)
+
 
 
 def redirect_url(request, short_code):
@@ -150,3 +168,13 @@ class ShortenerAPIView(ListCreateAPIView):
         # Generate the short code before saving the validated data
         short_code = generate_short_code()
         serializer.save(short_code=short_code)
+from django.shortcuts import render
+
+def features(request):
+    return render(request, 'shortener/features.html')
+
+def history(request):
+    return render(request, 'shortener/history.html')
+
+def about(request):
+    return render(request, 'shortener/about.html')

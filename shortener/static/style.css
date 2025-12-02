@@ -1,20 +1,35 @@
+/* ================= BODY & CONTAINER ================= */
 body {
     font-family: 'Inter', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: #333;
 }
+/* style.css */
+.nav-left .logo img {
+    height: 40px;      
+    width: auto;
+    vertical-align: middle;
+    margin-right: 8px;
+}
+
+.nav-left .logo span {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.nav-right .nav-btn {
+    margin-left: 10px;
+}
+
 
 .container {
     text-align: center;
     width: 90%;
     max-width: 500px;
+    margin: 80px auto 40px; 
 }
 
+/* HEADER */
 header h1 {
     color: white;
     font-size: 2.5rem;
@@ -26,7 +41,8 @@ header p {
     margin-bottom: 2rem;
 }
 
-.card, .result-card {
+/* CARDS  */
+.card, .result-card, .auth-card {
     background: white;
     padding: 2rem;
     border-radius: 15px;
@@ -34,20 +50,28 @@ header p {
     margin-bottom: 1.5rem;
 }
 
-.url-input {
+/*  URL INPUT  */
+input[type="url"], .auth-card input {
     width: 100%;
-    padding: 15px;
+    padding: 12px 15px;
     border: 2px solid #eee;
     border-radius: 8px;
     font-size: 1rem;
-    box-sizing: border-box; /* Fixes padding width issues */
+    box-sizing: border-box;
     margin-bottom: 1rem;
     outline: none;
     transition: border 0.3s;
 }
 
-.url-input:focus {
+input[type="url"]:focus, .auth-card input:focus {
     border-color: #764ba2;
+}
+
+/*  BUTTONS */
+button, .btn-shorten, .btn-copy, .btn-qr {
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: 600;
 }
 
 .btn-shorten {
@@ -58,15 +82,38 @@ header p {
     border: none;
     border-radius: 8px;
     font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.3s;
 }
 
 .btn-shorten:hover {
     background: #5a387e;
 }
 
+.btn-copy {
+    background: #333;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+}
+
+.btn-copy:hover {
+    background: #555;
+}
+
+.btn-qr {
+    background: #764ba2;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    border-radius: 6px;
+}
+
+.btn-qr:hover {
+    background: #5a387e;
+}
+
+/* LINK BOX */
 .link-box {
     display: flex;
     align-items: center;
@@ -75,6 +122,7 @@ header p {
     padding: 10px;
     border-radius: 8px;
     margin-top: 10px;
+    overflow-x: auto;
 }
 
 .link-box a {
@@ -87,56 +135,103 @@ header p {
     margin-right: 10px;
 }
 
-.btn-copy {
-    background: #333;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
+/*QR*/
 .qr-section img {
     margin-top: 15px;
     width: 150px;
     height: 150px;
 }
 
+/*  AUTH  */
+.navbar {
+    width: 100%;
+    background: white;
+    padding: 15px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0px 2px 10px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
 
-/* AUTHENTICAION */
-.auth-nav {
-    position: absolute;
-    top: 20px;
-    right: 30px;
+/* Left side nav bar */
+.nav-left {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    gap: 10px;
+}
+
+.logo img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+.logo span {
+    font-size: 22px;
+    font-weight: bold;
+    color: #3c3c3c;
+}
+
+/* Navbar items */
+.nav-item {
+    text-decoration: none;
+    color: #444;
+    font-size: 16px;
+    transition: 0.2s;
+}
+
+.nav-item:hover {
+    color: #007bff;
+}
+
+/* Right side buttons */
+.nav-right {
+    display: flex;
+    gap: 15px;
 }
 
 .nav-btn {
-    color: white;
+    padding: 8px 18px;
+    border-radius: 6px;
     text-decoration: none;
-    margin-left: 15px;
-    padding: 8px 12px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    border-radius: 5px;
-    transition: background 0.3s;
-}
-
-.nav-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-}
-
-.user-greeting {
-    color: white;
-    margin-right: 15px;
     font-weight: 600;
+    transition: 0.2s;
+    border: 2px solid #007bff;
 }
 
-.card.auth-card {
-    padding: 2.5rem;
-    max-width: 400px; /* Make the auth card slightly smaller */
-    margin: 0 auto;
+
+.login-btn {
+    color: #007bff;
+    background: white;
 }
 
-/* Style the input fields rendered by {{ form.as_p }} */
+.login-btn:hover {
+    background: #007bff;
+    color: white;
+}
+
+
+.signup-btn {
+    background: #007bff;
+    color: white;
+}
+
+.signup-btn:hover {
+    background: #005fcc;
+}
+
+/* AUTH PAGES  */
 .auth-card p {
     margin-bottom: 1rem;
     text-align: left;
@@ -157,8 +252,47 @@ header p {
     margin-top: 1.5rem;
     font-size: 0.9rem;
 }
+
 .auth-link a {
     color: #764ba2;
     text-decoration: none;
     font-weight: 600;
+}
+
+.history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.history-table th, .history-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.history-table th {
+    background-color: #764ba2;
+    color: white;
+}
+
+.history-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+@media screen and (max-width: 600px) {
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 10px 20px;
+    }
+
+    .nav-left, .nav-right {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .link-box {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
