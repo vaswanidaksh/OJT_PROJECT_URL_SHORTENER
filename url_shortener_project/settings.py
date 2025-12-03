@@ -26,10 +26,19 @@ SECRET_KEY = 'DJANGO-SECRET-KEY'
 DEBUG = False
 
 
-ALLOWED_HOSTS = []
-# ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'shortme.com', 'www.shortme.com', 'your_server_ip']
+# ALLOWED_HOSTS = ['10.110.157.188', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    '127.0.0.1',
+    'localhost',
+    '10.20.18.208',   # ip
+]
+
+
+# ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'shortme.com', 'www.shortme.com', 'your_server_ip'] #'localhost', 'yourshortener.com', 'www.yourshortener.com'
 
 # Application definition
+SITE_ID = 1
+
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -40,6 +49,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'shortener',
     'rest_framework',
+    'django.contrib.sites',  # required for allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
 ]
 
 MIDDLEWARE = [
@@ -48,9 +62,11 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',  # <-- forallauth
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'url_shortener_project.urls'
 
@@ -139,3 +155,14 @@ REST_FRAMEWORK = {
 # SECURE_SSL_REDIRECT = True
 # CSRF_COOKIE_SECURE = True
 # SESSION_COOKIE_SECURE = True
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online'},
+    }
+}

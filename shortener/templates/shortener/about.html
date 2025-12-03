@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | ShortMe</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'logo.png' %}" alt="ShortMe Logo">
+
+            <span>ShortMe</span>
+        </a>
+        <a href="{% url 'home' %}" class="nav-item">Home</a>
+        <a href="{% url 'features' %}" class="nav-item">Features</a>
+        <a href="{% url 'history' %}" class="nav-item">History</a>
+        <a href="{% url 'about' %}" class="nav-item">About</a>
+    </div>
+    <div class="nav-right">
+        <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
+        <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>About ShortMe ℹ️</h1>
+    <p>ShortMe is a lightweight URL shortening service that allows you to:</p>
+    <ul>
+        <li>Create short, shareable links</li>
+        <li>Generate QR codes for each link</li>
+        <li>Track link usage and manage your URLs</li>
+    </ul>
+    <p>Our goal is to make link sharing faster, easier, and more fun!</p>
+</div>
+
+</body>
+</html>

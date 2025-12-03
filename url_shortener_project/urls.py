@@ -19,5 +19,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('shortener.urls')),
+    path('', include('shortener.urls')),       # app URLs
+    path('accounts/', include('allauth.urls')),  # Django-allauth URLs for login/signup/google
 ]

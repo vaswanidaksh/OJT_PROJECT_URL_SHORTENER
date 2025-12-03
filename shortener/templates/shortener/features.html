@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Features | ShortMe</title>
+    <link rel="stylesheet" href="{% static 'style.css' %}">
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="nav-left">
+        <a href="{% url 'home' %}" class="logo">
+            <img src="{% static 'logo.png' %}" alt="ShortMe Logo">
+
+            <span>ShortMe</span>
+        </a>
+        <a href="{% url 'home' %}" class="nav-item">Home</a>
+        <a href="{% url 'features' %}" class="nav-item">Features</a>
+        <a href="{% url 'history' %}" class="nav-item">History</a>
+        <a href="{% url 'about' %}" class="nav-item">About</a>
+    </div>
+    <div class="nav-right">
+        <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
+        <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Features 🔥</h1>
+    <p>Here are the main features of ShortMe URL shortener:</p>
+    <ul>
+        <li>Create short URLs instantly</li>
+        <li>Generate QR codes for each link</li>
+        <li>Track link clicks (coming soon)</li>
+        <li>Easy social sharing</li>
+    </ul>
+</div>
+
+</body>
+</html>

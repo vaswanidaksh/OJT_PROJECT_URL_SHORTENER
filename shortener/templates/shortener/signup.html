@@ -1,27 +1,60 @@
 {% load static %}
+{% load socialaccount %}
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | QuickLink</title>
+    <title>Sign Up | ShortMe</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
+
 <body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <a href="{% url 'home' %}" class="logo">
+                <img src="{% static 'logo.png' %}" alt="ShortMe Logo">
+
+                <span>ShortMe</span>
+            </a>
+        </div>
+
+        <div class="nav-right">
+            <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
+            <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
+        </div>
+    </nav>
+
     <div class="container">
         <header>
-            <h1>Sign Up ✍️</h1>
-            <p>Create your account to start shortening links.</p>
+            <h1>Sign Up </h1>
+            <p>Create your account to start shortening URLs.</p>
         </header>
 
         <div class="card auth-card">
             <form method="POST">
                 {% csrf_token %}
-                {{ form.as_p }} 
+                {{ form.as_p }}
                 <button type="submit" class="btn-shorten">Create Account</button>
             </form>
-            <p class="auth-link">Already have an account? <a href="{% url 'login' %}">Log In</a></p>
+
+            <!-- Google signup/login button -->
+            <a href="{% provider_login_url 'google' %}" class="btn-shorten"
+                style="background:#DB4437; margin-top: 10px;">
+                Sign up with Google
+            </a>
+
+
+            <p class="auth-link">
+                Already have an account? <a href="{% url 'login' %}">Log In</a>
+            </p>
         </div>
     </div>
+
 </body>
+
 </html>
