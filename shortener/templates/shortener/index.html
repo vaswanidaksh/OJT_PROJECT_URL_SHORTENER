@@ -16,7 +16,6 @@
             <img src="{% static 'logo.png' %}" alt="ShortMe Logo">
             <span>ShortMe</span>
         </a>
-
         <a href="{% url 'home' %}" class="nav-item">Home</a>
         <a href="{% url 'features' %}" class="nav-item">Features</a>
         <a href="{% url 'history' %}" class="nav-item">History</a>
@@ -25,6 +24,7 @@
 
     <div class="nav-right">
         {% if user.is_authenticated %}
+            <span>Hello, {{ user.username }}</span>
             <a href="{% url 'logout' %}" class="nav-btn login-btn">Logout</a>
         {% else %}
             <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
@@ -33,7 +33,6 @@
     </div>
 </nav>
 
-
 <!-- Main Container -->
 <div class="container">
     <header>
@@ -41,14 +40,17 @@
         <p>Paste your long URL below and get a short one instantly.</p>
     </header>
 
+    <!-- Shortener Form -->
     <div class="card">
         <form method="POST">
             {% csrf_token %}
-            <input type="url" name="long_url" placeholder="Enter your long URL here..." required>
+            <!-- Correct field name to match your ShortenerForm -->
+            <input type="url" name="original_url" placeholder="Enter your long URL here..." required>
             <button type="submit" class="btn-shorten">Shorten URL</button>
         </form>
     </div>
 
+    <!-- Result Section -->
     {% if short_url %}
     <div class="card result-card">
         <p><strong>Your Short URL:</strong></p>
@@ -58,7 +60,6 @@
         </div>
 
         {% if qr_code %}
-        <!-- QR code hidden by default -->
         <div id="qr-container" class="qr-section" style="display:none;">
             <p>Scan the QR Code:</p>
             <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />

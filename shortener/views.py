@@ -1,180 +1,147 @@
-from django.shortcuts import render, redirect, get_object_or_404 #For redirecting, get 404 
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseNotFound
-from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from django.contrib.auth import login, logout  #For login and logout 
+from django.contrib.auth import login, logout
+from django.utils import timezone
+
 from .models import ShortURL
-from .utils import generate_short_code
-from rest_framework.generics import ListCreateAPIView 
-from .serializers import ShortURLSerializer 
-from rest_framework.permissions import AllowAny 
 from .forms import ShortenerForm
-import qrcode #Qr code library(for qrcode generation)
+from .utils import generate_short_code
+
+import qrcode
 from io import BytesIO
-import base64 #For our slug
+import base64
 
-
-
-# Create your views here.
-
+# ---------------------------
+# HOME (SHORTENER PAGE)
+# ---------------------------
 @login_required
 def home_view(request):
-    new_url = None
-    qr_code_base64 = None
-    
-    if request.method == 'POST':
+    short_url = None
+    qr_code = None
+
+    if request.method == "POST":
         form = ShortenerForm(request.POST)
         if form.is_valid():
-            short_url_obj = form.save()
-            
-            # Construct full short URL (e.g., http://localhost:8000/ABCD12)
-            new_url = request.build_absolute_uri('/') + short_url_obj.short_code
-            
-            # QR CODE GENERATION (Stretch Goal)
+            short_url_obj = form.save(commit=False)
+            short_url_obj.user = request.user
+            short_url_obj.save()
+
+            short_url = request.build_absolute_uri('/') + short_url_obj.short_code
+
+            # Generate QR code
             qr = qrcode.QRCode(version=1, box_size=10, border=5)
-            qr.add_data(new_url)
+            qr.add_data(short_url)
             qr.make(fit=True)
             img = qr.make_image(fill='black', back_color='white')
-            
-            # Convert image to base64 string to embed in HTML without saving to disk
+
             buffer = BytesIO()
             img.save(buffer, format="PNG")
-            qr_code_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-            
+            qr_code = base64.b64encode(buffer.getvalue()).decode('utf-8')
+
     else:
         form = ShortenerForm()
 
-    context = {
-        'form': form,
-        'new_url': new_url,
-        'qr_code': qr_code_base64
-    }
-    return render(request, 'shortener/index.html', context)
+    return render(request, "shortener/index.html", {
+        "form": form,
+        "short_url": short_url,
+        "qr_code": qr_code
+    })
 
-# Redirecting url
-def redirect_url_view(request, short_code):
-    """Handles the redirection logic"""
+# ---------------------------
+# REDIRECTION PAGE
+# ---------------------------
+def redirect_url(request, short_code):
     link = get_object_or_404(ShortURL, short_code=short_code)
-    
-    # Check Expiry
+
     if link.is_expired:
         return HttpResponseNotFound("<h1>This link has expired.</h1>")
-        
+
     return redirect(link.original_url)
-# For signup view
+
+
+# ---------------------------
+# SIGNUP
+# ---------------------------
 def signup_view(request):
     if request.user.is_authenticated:
-        return redirect('home')
-    
-    if request.method == 'POST':
+        return redirect("home")
+
+    if request.method == "POST":
         form = UserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-
-            # IMPORTANT FIX: specify backend
+            # Required when multiple auth backends exist
             user.backend = 'django.contrib.auth.backends.ModelBackend'
-
-            login(request, user)  # Log user in immediately after successful signup
-            return redirect('home')
+            login(request, user)
+            return redirect("home")
     else:
         form = UserCreationForm()
-    
-    return render(request, 'shortener/signup.html', {'form': form})
 
-#For login view
+    return render(request, "shortener/signup.html", {"form": form})
+
+
+# ---------------------------
+# LOGIN
+# ---------------------------
 def custom_login_view(request):
-    if request.user.is_authenticated: # Don't show login if already logged in
-        return redirect('home')
-        
-    if request.method == 'POST':
+    if request.user.is_authenticated:
+        return redirect("home")
+
+    if request.method == "POST":
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            user = form.get_user()
-            login(request, user)
-            return redirect('home')
+            login(request, form.get_user())
+            return redirect("home")
     else:
         form = AuthenticationForm()
-        
-    return render(request, 'shortener/login.html', {'form': form})
 
-#For logout
+    return render(request, "shortener/login.html", {"form": form})
+
+
+# ---------------------------
+# LOGOUT
+# ---------------------------
 def custom_logout_view(request):
     logout(request)
-    # The redirect is handled by LOGOUT_REDIRECT_URL in settings.py,
-    # but explicitly redirecting here works fine too.
-    return redirect('home')
+    return redirect("login")
 
 
-def index(request):
-    short_url = None
-    qr_code_base64 = None
-
-    if request.method == 'POST':
-        long_url = request.POST.get('long_url')  # matches the input name
-        if not long_url:
-            return render(request, 'shortener/index.html', {'error': 'URL cannot be empty.'})
-
-        # Generate short code
-        short_code = generate_short_code()
-        # Save to database
-        short_url_obj = ShortURL.objects.create(original_url=long_url, short_code=short_code)
-        # Construct full short URL
-        short_url = request.build_absolute_uri('/') + short_code
-
-        # QR CODE GENERATION
-        qr = qrcode.QRCode(version=1, box_size=10, border=5)
-        qr.add_data(short_url)
-        qr.make(fit=True)
-        img = qr.make_image(fill='black', back_color='white')
-        buffer = BytesIO()
-        img.save(buffer, format="PNG")
-        qr_code_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
-
-    context = {
-        'short_url': short_url,
-        'qr_code': qr_code_base64
-    }
-    return render(request, 'shortener/index.html', context)
-
-
-
-def redirect_url(request, short_code):
-    # Your existing redirect_url logic
-    link = get_object_or_404(ShortURL, short_code=short_code)
-    # Optional: You might want to increment a counter here
-    return redirect(link.original_url)
-
-
-# API View (NEW)
-
-class ShortenerAPIView(ListCreateAPIView):
-    
-    # API endpoint that allows listing all short URLs (GET) and creating a new short URL (POST).
-    # This view combines the logic for both methods.
-    
-    # Define the queryset (what data to list for GET)
-    queryset = ShortURL.objects.all().order_by('-created_at')
-    
-    # Define the serializer (how to validate and format data)
-    serializer_class = ShortURLSerializer
-    
-    # Define the permission (who can access this API)
-    # AllowAny means anyone can access it (for public shortener)
-    permission_classes = [AllowAny]
-    
-    # Override perform_create to inject the short code generation logic
-    def perform_create(self, serializer):
-        # Generate the short code before saving the validated data
-        short_code = generate_short_code()
-        serializer.save(short_code=short_code)
-from django.shortcuts import render
-
-def features(request):
-    return render(request, 'shortener/features.html')
-
+# ---------------------------
+# HISTORY PAGE (USER-SPECIFIC)
+# ---------------------------
+@login_required
 def history(request):
-    return render(request, 'shortener/history.html')
+    urls = ShortURL.objects.filter(user=request.user).order_by("-created_at")
+    return render(request, "shortener/history.html", {"urls": urls})
+
+
+# ---------------------------
+# STATIC PAGES
+# ---------------------------
+def features(request):
+    return render(request, "shortener/features.html")
+
 
 def about(request):
-    return render(request, 'shortener/about.html')
+    return render(request, "shortener/about.html")
+
+
+# ---------------------------
+# API VIEW (DRF)
+# ---------------------------
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.permissions import AllowAny
+from .serializers import ShortURLSerializer
+
+class ShortenerAPIView(ListCreateAPIView):
+    """
+    API endpoint that allows listing all short URLs (GET) and creating new short URLs (POST)
+    """
+    queryset = ShortURL.objects.all().order_by('-created_at')
+    serializer_class = ShortURLSerializer
+    permission_classes = [AllowAny]
+
+    def perform_create(self, serializer):
+        serializer.save(short_code=generate_short_code())

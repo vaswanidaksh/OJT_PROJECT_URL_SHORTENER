@@ -4,7 +4,7 @@ from .views import ShortenerAPIView
 
 urlpatterns = [
     # Web pages
-    path('', views.index, name='home'),  # Homepage
+    path('', views.home_view, name='home'),  # Homepage
     path('features/', views.features, name='features'),
     path('history/', views.history, name='history'),
     path('about/', views.about, name='about'),
