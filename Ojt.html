@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="ojt.css">
+</head>
+<body class="main-bg">
+    <nav>
+        <div class="left-buttons">
+            <button id="shorten-me-btn">Short Me</button>
+        </div>
+        <ul>
+            <li><a href="#" class="nav-link" data-target="home">Home</a></li>
+            <li><a href="#" class="nav-link" data-target="about-us">About Us</a></li>
+            <li><a href="#" class="nav-link" data-target="features">Features</a></li>
+            <li><a href="#" class="nav-link" data-target="developers">Developers</a></li>
+        </ul>
+        <div class="right-buttons">
+            <button id="login-btn">Login</button>
+        </div>
+    </nav>
+
+
+    <div class="container">
+
+        <div id="home" class="section active">
+            <div class="home-content">
+                <h2>Welcome to Our URL Shortener!</h2>
+                <p>Shorten long URLs in a matter of seconds.</p>
+            </div>
+
+            <div class="form-container">
+                <h2>URL Shortener</h2>
+                <input type="url" placeholder="Enter a long URL" id="url-input" />
+                <br />
+                <button id="generate-btn" class="generate-btn">Generate</button>
+            </div>
+        </div>
+
+      
+        <div id="about-us" class="section">
+            <h2>About Us</h2>
+            <p>We are an open source company that shortens URLs to make the internet a cleaner place!</p>
+        </div>
+
+             <div id="features" class="section">
+            <h2>Features</h2>
+            <ul>
+                <li>Make long URLs short in seconds.</li>
+                <li>Generate QR codes for any shortened URL.</li>
+                <li>Customize the short URL with your own domain.</li>
+            </ul>
+        </div>
+
+        <div id="developers" class="section">
+            <h2>Meet the Developers</h2>
+            <p><strong>Daksh</strong> and <strong>Devansh</strong>.</p>
+        </div>
+
+    </div>
+    <div id="about" class="hidden flex flex-col items-center mt-20">
+        <h2 class="text-3xl font-bold mb-4">About Us</h2>
+        <p class="text-lg text-center max-w-md">
+            We provide a fast and simple URL shortener tool that helps you make long links clean and easy to share.
+            Our goal is to keep things simple, fast, and user-friendly.
+        </p>
+    </div>
+    <script src="ojt.js"></script>
+
+<script src="ojt.js"></script>
+</body>
+</html>

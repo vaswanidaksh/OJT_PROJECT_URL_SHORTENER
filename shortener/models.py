@@ -27,3 +27,31 @@ class ShortURL(models.Model):
 
     def __str__(self):
         return f"{self.short_code} -> {self.original_url}"
+    
+class URLMap(models.Model):
+    """
+    Model to store the mapping between the long original URL and the 
+    short generated code.
+    """
+    long_url = models.URLField(
+        max_length=2048, 
+        unique=True,
+        verbose_name="Original Long URL"
+    )
+    short_code = models.CharField(
+        max_length=10, 
+        unique=True, 
+        db_index=True,
+        verbose_name="Short Code"
+    )
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+    
+    def __str__(self):
+        """String representation of the URL mapping."""
+        return f"{self.short_code} -> {self.long_url[:50]}..."
+
+    class Meta:
+        verbose_name = "URL Mapping"
+        verbose_name_plural = "URL Mappings"
