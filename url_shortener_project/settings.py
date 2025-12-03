@@ -17,7 +17,7 @@ SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback-secret-key-for-testing')
 DEBUG = False
 
 # Replace 'yourusername' with your PythonAnywhere username
-ALLOWED_HOSTS = ['yourusername.pythonanywhere.com']
+ALLOWED_HOSTS = ['devanshbaghel18.pythonanywhere.com']
 
 # Application definition
 SITE_ID = 1
