@@ -6,6 +6,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>History | ShortMe</title>
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <style>
+        /* Table styling */
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .history-table th, .history-table td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+        }
+
+        .history-table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .history-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .history-table tr:hover {
+            background-color: #eee;
+        }
+
+        .history-table td a {
+            color: #1a73e8;
+            text-decoration: none;
+        }
+
+        .history-table td a:hover {
+            text-decoration: underline;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+    </style>
 </head>
 <body>
 
@@ -14,23 +56,57 @@
     <div class="nav-left">
         <a href="{% url 'home' %}" class="logo">
             <img src="{% static 'logo.png' %}" alt="ShortMe Logo">
-
             <span>ShortMe</span>
         </a>
+
         <a href="{% url 'home' %}" class="nav-item">Home</a>
         <a href="{% url 'features' %}" class="nav-item">Features</a>
-        <a href="{% url 'history' %}" class="nav-item">History</a>
+        <a href="{% url 'history' %}" class="nav-item active">History</a>
         <a href="{% url 'about' %}" class="nav-item">About</a>
     </div>
+
     <div class="nav-right">
-        <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
-        <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
+        {% if user.is_authenticated %}
+            <span>Hello, {{ user.username }}</span>
+            <a href="{% url 'logout' %}" class="nav-btn logout-btn">Logout</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
+            <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
+        {% endif %}
     </div>
 </nav>
 
+<!-- History Content -->
 <div class="container">
-    <h1>History 📜</h1>
-    <p>Track all your previously shortened links here. (Feature coming soon)</p>
+    <h1>Your Shortened URLs 📜</h1>
+
+    {% if urls %}
+        <table class="history-table">
+            <tr>
+                <th>Short URL</th>
+                <th>Original URL</th>
+                <th>Created</th>
+            </tr>
+
+            {% for u in urls %}
+            <tr>
+                <td>
+                    <a href="/{{ u.short_code }}" target="_blank">
+                        http://{{ request.get_host }}/{{ u.short_code }}
+                    </a>
+                </td>
+                
+                <td style="max-width:400px; word-break:break-word;">
+                    {{ u.original_url }}
+                </td>
+
+                <td>{{ u.created_at|date:"Y-m-d H:i" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <p>You haven’t shortened any URLs yet.</p>
+    {% endif %}
 </div>
 
 </body>
