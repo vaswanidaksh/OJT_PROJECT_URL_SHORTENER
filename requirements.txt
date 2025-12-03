@@ -1,5 +1,4 @@
 asgiref==3.11.0
-bcc==0.18.0
 blinker==1.4
 Brlapi==0.8.3
 Brotli==1.0.9
