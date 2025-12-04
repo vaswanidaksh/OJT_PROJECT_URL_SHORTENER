@@ -16,7 +16,6 @@ import base64
 # ---------------------------
 # HOME (SHORTENER PAGE)
 # ---------------------------
-@login_required
 def home_view(request):
     short_url = None
     qr_code = None
@@ -25,7 +24,13 @@ def home_view(request):
         form = ShortenerForm(request.POST)
         if form.is_valid():
             short_url_obj = form.save(commit=False)
-            short_url_obj.user = request.user
+
+            # Save user ONLY if logged in
+            if request.user.is_authenticated:
+                short_url_obj.user = request.user
+            else:
+                short_url_obj.user = None
+
             short_url_obj.save()
 
             short_url = request.build_absolute_uri('/') + short_url_obj.short_code
@@ -48,6 +53,7 @@ def home_view(request):
         "short_url": short_url,
         "qr_code": qr_code
     })
+
 
 # ---------------------------
 # REDIRECTION PAGE
