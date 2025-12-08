@@ -1,87 +1,156 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ShortMe | URL Shortener</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-
+  <meta charset="utf-8">
+  <title>ShortMe — Home</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
 
+<!-- Navbar -->
 <nav class="navbar">
-    <div class="nav-left">
-        <a href="{% url 'home' %}" class="logo">
-            <img src="{% static 'img/logo.png' %}" alt="ShortMe Logo">
-            <span>ShortMe</span>
-        </a>
-        <a href="{% url 'home' %}" class="nav-item">Home</a>
-        <a href="{% url 'features' %}" class="nav-item">Features</a>
-        <a href="{% url 'history' %}" class="nav-item">History</a>
-        <a href="{% url 'about' %}" class="nav-item">About</a>
-    </div>
+  <div class="nav-left">
+    <a href="{% url 'home' %}" class="logo">
+      <img class="logo-img" src="{% static 'logo.png' %}" alt="ShortMe Logo">
+      <span class="brand">ShortMe</span>
+    </a>
 
-    <div class="nav-right">
-        {% if user.is_authenticated %}
-            <span>Hello, {{ user.username }}</span>
-            <a href="{% url 'logout' %}" class="nav-btn login-btn">Logout</a>
-        {% else %}
-            <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
-            <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
-        {% endif %}
-    </div>
+    <a href="{% url 'home' %}" class="nav-item">Home</a>
+    <a href="{% url 'features' %}" class="nav-item">Features</a>
+    <a href="{% url 'history' %}" class="nav-item">History</a>
+    <a href="{% url 'about' %}" class="nav-item">About</a>
+  </div>
+
+  <div class="nav-right">
+    {% if user.is_authenticated %}
+      <span class="greeting">Hello, {{ user.username }}</span>
+      <a href="{% url 'logout' %}" class="nav-btn login-btn">Logout</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
+      <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
+    {% endif %}
+  </div>
 </nav>
 
-<!-- Main Container -->
-<div class="container">
-    <header>
-        <h1>Shorten Your Long URLs ✨</h1>
-        <p>Paste your long URL below and get a short one instantly.</p>
-    </header>
+<!-- Hero -->
+<section class="hero hero-grid">
+  <div class="container">
+    <div style="max-width:920px; margin:0 auto;">
+      <div class="eyebrow">ShortMe</div>
+      <h1>Shorten Your URLs Instantly</h1>
+      <p>Transform long, unwieldy URLs into clean, shareable links with next-gen performance.</p>
+    </div>
+  </div>
+</section>
 
-    <!-- Shortener Form -->
-    <div class="card">
-        <form method="POST">
-            {% csrf_token %}
-            <!-- Correct field name to match your ShortenerForm -->
-            <input type="url" name="original_url" placeholder="Enter your long URL here..." required>
-            <button type="submit" class="btn-shorten">Shorten URL</button>
-        </form>
+<!-- Shorten card -->
+<section class="container">
+  <div class="card wide">
+    <div style="display:flex; align-items:center; gap:14px; margin-bottom:8px;">
+      <div style="width:44px; height:44px; border-radius:10px; background:linear-gradient(90deg, rgba(41,208,255,0.12), rgba(132,91,255,0.12)); display:flex; align-items:center; justify-content:center; font-weight:800; color:#021224;">🔗</div>
+      <h3 style="margin:0; color:var(--text);">Shorten Your Link</h3>
     </div>
 
-    <!-- Result Section -->
-    {% if short_url %}
-    <div class="card result-card">
-        <p><strong>Your Short URL:</strong></p>
-        <div class="link-box">
-            <a href="{{ short_url }}" target="_blank" id="short-link">{{ short_url }}</a>
-            <button onclick="copyLink()" class="btn-copy">Copy</button>
-        </div>
+    <form method="POST" style="margin-top:8px;">
+      {% csrf_token %}
+      <div class="input-panel" role="group" aria-label="Shorten URL">
+        <input type="url" name="original_url" class="input" placeholder="https://example.com/your-very-long-url-here" required>
+        <button type="submit" class="btn-shorten">Shorten →</button>
+      </div>
+      <p style="margin-top:12px; color:var(--muted); font-size:0.92rem;">By shortening a URL you agree to our terms. No registration required.</p>
+    </form>
 
-        {% if qr_code %}
-        <div id="qr-container" class="qr-section" style="display:none;">
-            <p>Scan the QR Code:</p>
-            <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code" />
+    {% if short_url %}
+    <div class="result-card" role="status" aria-live="polite">
+      <div class="link-box">
+        <div style="display:flex; flex-direction:column; gap:6px; min-width:0;">
+          <span class="small-label">Your Short URL:</span>
+          <a id="short-link" href="{{ short_url }}" target="_blank">{{ short_url }}</a>
         </div>
-        <button onclick="showQR()" class="btn-qr">Show QR</button>
+      </div>
+
+      <div style="display:flex; gap:8px; align-items:center;">
+        <button class="btn-copy" onclick="navigator.clipboard.writeText(document.getElementById('short-link').href)">Copy</button>
+        {% if qr_code %}
+        <button class="btn-qr" onclick="toggleQR()">Show QR</button>
         {% endif %}
+      </div>
+    </div>
+
+    {% if qr_code %}
+    <div id="qrbox" class="qr-section" style="display:none; margin-top:12px;">
+      <img src="data:image/png;base64,{{ qr_code }}" alt="QR code">
     </div>
     {% endif %}
-</div>
+    {% endif %}
+  </div>
+
+  <!-- Features preview -->
+  <div class="features-grid" style="margin-top:28px;">
+    <div class="feature-card">
+      <h4>Lightning Fast</h4>
+      <p class="muted">Generate short URLs in milliseconds.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Secure & Reliable</h4>
+      <p class="muted">Enterprise-grade redirects and safe handling.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Click Analytics</h4>
+      <p class="muted">Track link clicks and usage.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Global CDN</h4>
+      <p class="muted">Fast redirects from anywhere in the world.</p>
+    </div>
+    <div class="feature-card">
+      <h4>Mobile Friendly</h4>
+      <p class="muted">Optimized for phones and tablets.</p>
+    </div>
+    <div class="feature-card">
+      <h4>QR Codes</h4>
+      <p class="muted">Scan-ready codes for easy sharing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <div class="container" style="display:flex; gap:24px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;">
+    <div style="max-width:420px;">
+      <div style="display:flex; gap:10px; align-items:center;">
+        <div style="width:44px; height:44px; border-radius:10px; background:linear-gradient(90deg, rgba(41,208,255,0.12), rgba(132,91,255,0.12));"></div>
+        <strong>ShortMe</strong>
+      </div>
+      <p style="color:var(--muted); margin-top:12px;">Fast, minimal URL shortening built for developers and creators.</p>
+    </div>
+
+    <div style="display:flex; gap:36px; color:var(--muted);">
+      <div>
+        <h4 style="color:var(--text); margin:0 0 8px 0;">Product</h4>
+        <ul style="list-style:none; padding:0; margin:0;">
+          <li><a class="nav-item" href="{% url 'features' %}">Features</a></li>
+          <li><a class="nav-item" href="{% url 'history' %}">History</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 style="color:var(--text); margin:0 0 8px 0;">Company</h4>
+        <ul style="list-style:none; padding:0; margin:0;">
+          <li><a class="nav-item" href="{% url 'about' %}">About</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
 
 <script>
-function copyLink() {
-    const copyText = document.getElementById("short-link").href;
-    navigator.clipboard.writeText(copyText);
-    alert("Link copied to clipboard!");
-}
-
-function showQR() {
-    const qrBox = document.getElementById("qr-container");
-    if (qrBox) qrBox.style.display = "block";
+function toggleQR(){
+  const el = document.getElementById('qrbox');
+  if (!el) return;
+  el.style.display = (el.style.display === 'none' || el.style.display === '') ? 'flex' : 'none';
 }
 </script>
-
 </body>
 </html>

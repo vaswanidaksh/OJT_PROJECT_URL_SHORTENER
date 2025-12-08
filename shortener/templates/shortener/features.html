@@ -1,43 +1,74 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Features | ShortMe</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <meta charset="utf-8">
+  <title>History — ShortMe</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-
-<!-- Navbar -->
 <nav class="navbar">
-    <div class="nav-left">
-        <a href="{% url 'home' %}" class="logo">
-            <img src="{% static 'img/logo.png' %}" alt="ShortMe Logo">
+  <div class="nav-left">
+    <a href="{% url 'home' %}" class="logo">
+      <img class="logo-img" src="{% static 'logo.png' %}" alt="ShortMe Logo">
+      <span class="brand">ShortMe</span>
+    </a>
+    <a href="{% url 'home' %}" class="nav-item">Home</a>
+    <a href="{% url 'features' %}" class="nav-item">Features</a>
+    <a href="{% url 'history' %}" class="nav-item active">History</a>
+    <a href="{% url 'about' %}" class="nav-item">About</a>
+  </div>
 
-            <span>ShortMe</span>
-        </a>
-        <a href="{% url 'home' %}" class="nav-item">Home</a>
-        <a href="{% url 'features' %}" class="nav-item">Features</a>
-        <a href="{% url 'history' %}" class="nav-item">History</a>
-        <a href="{% url 'about' %}" class="nav-item">About</a>
-    </div>
-    <div class="nav-right">
-        <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
-        <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
-    </div>
+  <div class="nav-right">
+    {% if user.is_authenticated %}
+      <span class="greeting">Hello, {{ user.username }}</span>
+      <a href="{% url 'logout' %}" class="nav-btn login-btn">Logout</a>
+    {% else %}
+      <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
+      <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
+    {% endif %}
+  </div>
 </nav>
 
-<div class="container">
-    <h1>Features 🔥</h1>
-    <p>Here are the main features of ShortMe URL shortener:</p>
-    <ul>
-        <li>Create short URLs instantly</li>
-        <li>Generate QR codes for each link</li>
-        <li>Track link clicks</li>
-        <li>Easy social sharing</li>
-    </ul>
-</div>
+<main class="container">
+  <div class="card wide">
+    <h1 style="margin-top:0;">Your Shortened URLs</h1>
+    <p class="muted">Manage your links below.</p>
 
+    {% if urls %}
+      <div style="overflow:auto; margin-top:12px;">
+        <table class="history-table" role="table">
+          <thead>
+            <tr>
+              <th>Short URL</th>
+              <th>Original URL</th>
+              <th>Created</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for u in urls %}
+            <tr>
+              <td><a class="short-link" href="/{{ u.short_code }}" target="_blank">http://{{ request.get_host }}/{{ u.short_code }}</a></td>
+              <td style="max-width:420px; word-break:break-word; color:var(--muted);">{{ u.original_url }}</td>
+              <td class="muted">{{ u.created_at|date:"Y-m-d H:i" }}</td>
+              <td>
+                <form method="post" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="id" value="{{ u.id }}">
+                  <button class="btn-copy" type="submit" name="action" value="delete">Delete</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <p class="muted" style="margin-top:18px;">You haven’t shortened any URLs yet.</p>
+    {% endif %}
+  </div>
+</main>
 </body>
 </html>

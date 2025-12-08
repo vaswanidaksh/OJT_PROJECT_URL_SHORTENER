@@ -1,60 +1,47 @@
 {% load static %}
 {% load socialaccount %}
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign Up | ShortMe</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <meta charset="utf-8">
+  <title>Sign Up — ShortMe</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
-
 <body>
+<nav class="navbar">
+  <div class="nav-left">
+    <a href="{% url 'home' %}" class="logo">
+      <img class="logo-img" src="{% static 'logo.png' %}" alt="ShortMe Logo">
+      <span class="brand">ShortMe</span>
+    </a>
+  </div>
 
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-left">
-            <a href="{% url 'home' %}" class="logo">
-               <img src="{% static 'img/logo.png' %}" alt="ShortMe Logo">
+  <div class="nav-right">
+    <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
+    <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
+  </div>
+</nav>
 
-                <span>ShortMe</span>
-            </a>
-        </div>
+<main class="container">
+  <header style="text-align:center; margin-bottom:18px;">
+    <h1 style="margin:0;">Create Account</h1>
+    <p class="muted">Sign up to manage your links.</p>
+  </header>
 
-        <div class="nav-right">
-            <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
-            <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
-        </div>
-    </nav>
+  <div class="auth-card card">
+    <form method="post" style="display:flex; flex-direction:column; gap:12px;">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn-shorten" type="submit">Create Account</button>
+    </form>
 
-    <div class="container">
-        <header>
-            <h1>Sign Up </h1>
-            <p>Create your account to start shortening URLs.</p>
-        </header>
+    <a href="{% provider_login_url 'google' %}" class="btn-shorten" style="background: linear-gradient(90deg,var(--accent-cyan),var(--accent-purple)); margin-top:10px; display:inline-block; text-align:center;">
+      Sign up with Google
+    </a>
 
-        <div class="card auth-card">
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn-shorten">Create Account</button>
-            </form>
-
-            <!-- Google signup/login button -->
-            <a href="{% provider_login_url 'google' %}" class="btn-shorten"
-                style="background:#DB4437; margin-top: 10px;">
-                Sign up with Google
-            </a>
-
-
-            <p class="auth-link">
-                Already have an account? <a href="{% url 'login' %}">Log In</a>
-            </p>
-        </div>
-    </div>
-
+    <p class="auth-link">Already have an account? <a href="{% url 'login' %}">Log In</a></p>
+  </div>
+</main>
 </body>
-
 </html>

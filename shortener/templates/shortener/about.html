@@ -1,43 +1,48 @@
 {% load static %}
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About | ShortMe</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <meta charset="utf-8">
+  <title>About — ShortMe</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
 </head>
 <body>
-
-<!-- Navbar -->
 <nav class="navbar">
-    <div class="nav-left">
-        <a href="{% url 'home' %}" class="logo">
-            <img src="{% static 'img/logo.png' %}" alt="ShortMe Logo">
+  <div class="nav-left">
+    <a href="{% url 'home' %}" class="logo">
+      <img class="logo-img" src="{% static 'logo.png' %}" alt="ShortMe Logo">
+      <span class="brand">ShortMe</span>
+    </a>
+    <a href="{% url 'home' %}" class="nav-item">Home</a>
+    <a href="{% url 'features' %}" class="nav-item">Features</a>
+    <a href="{% url 'history' %}" class="nav-item">History</a>
+    <a href="{% url 'about' %}" class="nav-item active">About</a>
+  </div>
 
-            <span>ShortMe</span>
-        </a>
-        <a href="{% url 'home' %}" class="nav-item">Home</a>
-        <a href="{% url 'features' %}" class="nav-item">Features</a>
-        <a href="{% url 'history' %}" class="nav-item">History</a>
-        <a href="{% url 'about' %}" class="nav-item">About</a>
-    </div>
-    <div class="nav-right">
-        <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
-        <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
-    </div>
+  <div class="nav-right">
+    <a href="{% url 'login' %}" class="nav-btn login-btn">Login</a>
+    <a href="{% url 'signup' %}" class="nav-btn signup-btn">Signup</a>
+  </div>
 </nav>
 
-<div class="container">
-    <h1>About ShortMe ℹ️</h1>
-    <p>ShortMe is a lightweight URL shortening service that allows you to:</p>
-    <ul>
-        <li>Create short, shareable links</li>
-        <li>Generate QR codes for each link</li>
-        <li>Track link usage and manage your URLs</li>
-    </ul>
-    <p>Our goal is to make link sharing faster, easier, and more fun!</p>
-</div>
+<main class="container">
+  <div class="card wide">
+    <h1 style="margin-top:0;">About ShortMe</h1>
+    <p class="muted">ShortMe is built to be fast, minimal, and privacy-conscious. We focus on a clean UX, reliable redirects, and small surface area for users to get links quickly.</p>
 
+    <div style="display:grid; grid-template-columns:1fr 320px; gap:18px; margin-top:18px;">
+      <div class="card" style="padding:16px;">
+        <h4 style="margin-top:0;">Our Mission</h4>
+        <p class="muted">Provide an unobtrusive tool for shortening and sharing links with speed and clarity.</p>
+      </div>
+
+      <aside class="card" style="padding:16px;">
+        <h4 style="margin-top:0;">Contact</h4>
+        <p class="muted">support@we.com</p>
+      </aside>
+    </div>
+  </div>
+</main>
 </body>
 </html>
