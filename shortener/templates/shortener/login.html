@@ -4,23 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | QuickLink</title>
+    <title>Log In — QuickLink</title>
+    <meta name="description" content="Log in to your QuickLink account to shorten URLs and generate QR codes.">
     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>Log In 🚪</h1>
-            <p>Welcome back! Enter your credentials.</p>
-        </header>
+    <div class="page-wrapper">
+        <div class="container">
+            <header>
+                <h1>Welcome back</h1>
+                <p>Log in to start shortening links.</p>
+            </header>
 
-        <div class="card auth-card">
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn-shorten">Log In</button>
-            </form>
-            <p class="auth-link">Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+            <div class="card auth-card" id="login-card">
+                <form method="POST" id="login-form">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn-shorten" id="login-submit-btn">Log In</button>
+                </form>
+                <p class="auth-link">
+                    Don't have an account? <a href="{% url 'signup' %}">Create one</a>
+                </p>
+            </div>
         </div>
     </div>
 </body>

@@ -4,60 +4,97 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>QuickLink | URL Shortener</title>
+    <title>QuickLink — Shorten Any URL Instantly</title>
+    <meta name="description" content="QuickLink is a fast, modern URL shortener with QR code generation. Shorten links instantly and share them anywhere.">
     <link rel="stylesheet" href="{% static 'style.css' %}">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;800&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <header>
-            <h1>QuickLink 🚀</h1>
-            <p>Shorten links. Generate QR Codes. Track success.</p>
-        </header>
+    <!-- Auth Navigation -->
+    <nav class="auth-nav">
+        {% if user.is_authenticated %}
+            <span class="user-greeting">Welcome, <strong>{{ user.username }}</strong></span>
+            <a href="{% url 'logout' %}" class="nav-btn" id="logout-btn">Log out</a>
+        {% else %}
+            <a href="{% url 'login' %}" class="nav-btn" id="login-btn">Log in</a>
+            <a href="{% url 'signup' %}" class="nav-btn" id="signup-btn">Sign up</a>
+        {% endif %}
+    </nav>
 
-        <div class="card">
-            <form method="POST">
-                {% csrf_token %}
-                {{ form.original_url }}
-                <button type="submit" class="btn-shorten">Shorten URL</button>
-            </form>
-        </div>
+    <div class="page-wrapper">
+        <div class="container">
+            <!-- Header -->
+            <header>
+                <h1>QuickLink</h1>
+                <p>Shorten links. Generate QR codes. Share instantly.</p>
+            </header>
 
-        {% if new_url %}
-        <div class="result-card">
-            <h3>Here is your short link:</h3>
-            <div class="link-box">
-                <a href="{{ new_url }}" target="_blank" id="short-link">{{ new_url }}</a>
-                <button onclick="copyLink()" class="btn-copy">Copy</button>
+            <!-- URL Shortener Form -->
+            <div class="card" id="shortener-card">
+                <form method="POST" id="shorten-form">
+                    {% csrf_token %}
+                    {{ form.original_url }}
+                    <button type="submit" class="btn-shorten" id="shorten-btn">
+                        Shorten URL
+                    </button>
+                </form>
             </div>
-            
-            {% if qr_code %}
-            <div class="qr-section">
-                <p>Scan for mobile access:</p>
-                <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+
+            <!-- Result -->
+            {% if new_url %}
+            <div class="result-card {% if already_existed %}result-existing{% else %}result-new{% endif %}" id="result-card">
+                {% if already_existed %}
+                    <span class="status-badge existing">⟳ Already shortened</span>
+                    <h3>This URL was already in our system</h3>
+                    <p class="subtitle">Here's your existing short link — no duplicates created.</p>
+                {% else %}
+                    <span class="status-badge new">✓ Created</span>
+                    <h3>Your short link is ready</h3>
+                {% endif %}
+
+                <div class="link-box">
+                    <a href="{{ new_url }}" target="_blank" id="short-link">{{ new_url }}</a>
+                    <button onclick="copyLink()" class="btn-copy" id="copy-btn">Copy</button>
+                </div>
+                
+                {% if qr_code %}
+                <div class="qr-section">
+                    <p>Scan to open on mobile</p>
+                    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code for {{ new_url }}" id="qr-code-img">
+                </div>
+                {% endif %}
             </div>
             {% endif %}
         </div>
-        {% endif %}
     </div>
 
-    <div class="auth-nav">
-        {% if user.is_authenticated %}
-            <span class="user-greeting">Welcome, **{{ user.username }}**!</span>
-            <a href="{% url 'logout' %}" class="nav-btn">Logout</a>
-        {% else %}
-            <a href="{% url 'login' %}" class="nav-btn">Login</a>
-            <a href="{% url 'signup' %}" class="nav-btn">Sign Up</a>
-        {% endif %}
-    </div>
-    <div class="container">
-    </div>
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
 
     <script>
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast show ' + type;
+            setTimeout(() => {
+                toast.className = 'toast';
+            }, 2500);
+        }
+
         function copyLink() {
-            var copyText = document.getElementById("short-link").href;
-            navigator.clipboard.writeText(copyText);
-            alert("Link copied to clipboard!");
+            const link = document.getElementById('short-link').href;
+            navigator.clipboard.writeText(link).then(() => {
+                const btn = document.getElementById('copy-btn');
+                btn.textContent = '✓ Copied';
+                btn.classList.add('copied');
+                showToast('Link copied to clipboard', 'success');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2500);
+            });
         }
     </script>
 </body>
